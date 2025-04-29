@@ -2,7 +2,8 @@ const heroModel = require('../models/heroModel');
 
 const getAllHeroes = async (req, res) => {
     try {
-        const heroes = await heroModel.getAllHeroes();
+        const { nome } = req.query;
+        const heroes = await heroModel.getAllHeroes(nome);
         res.json(heroes);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar os heróis'})
