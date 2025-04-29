@@ -15,4 +15,18 @@ const createHero = async (nome, photo) => {
     return result.rows[0];
 }
 
-module.exports = {getAllHeroes, getHeroById, createHero}
+const updateHero = async (id, nome, photo) => {
+    const result = await pool.query("UPDATE heroes SET nome = $1, photo = $2 WHERE id = $3 RETURNING *", [nome, photo, id]);
+    return result.rows[0]
+}
+
+const deleteHero = async (id) => {
+    const result = await pool.query("DELETE FROM heroes WHERE id = $1 RETURNING *", [id]);
+
+    if (result.rowCount === 0) {
+        return { error: "Herói não encontrado." };
+    }
+    return { message: "Herói deletado com sucesso." };
+};
+
+module.exports = {getAllHeroes, getHeroById, createHero, updateHero, deleteHero}

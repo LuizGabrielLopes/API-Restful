@@ -35,10 +35,28 @@ const createHero = async (req, res) => {
 
 const updateHero = async (req, res) => {
     try {
-        
+        const { nome, photo} = req.body;
+        const hero = await heroModel.updateHero(req.params.id, nome, photo);
+        if (!hero) {
+            return res.status(404).json({ error: "Herói não encontrado"})
+        }
+        res.json(hero)
     } catch (error) {
         res.status(500).json({ message: "Erro ao atualizar um herói"})
     }
 }
 
-module.exports = {getAllHeroes, getHeroById, createHero}
+const deleteHero = async (req,res) => {
+    try {
+        const result = await heroModel.deleteHero(req.params.id);
+        if (result.error) {
+            return res.status(404).json(result)
+        }
+        res.json(result);
+    } catch (error) {
+        console.error('Erro ao buscar herói:', error);
+        res.status(500).json({ error: 'Erro ao deletar herói'})
+    }
+}
+
+module.exports = {getAllHeroes, getHeroById, createHero, updateHero, deleteHero}
